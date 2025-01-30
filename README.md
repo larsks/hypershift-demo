@@ -1,13 +1,3 @@
-# Bugs 🪲 that are impacting today's demo
-
-- https://github.com/openshift/cluster-api-provider-agent/pull/95 (https://issues.redhat.com//browse/OCPBUGS-25599)
-
-  This requires us to create hosted clusters with 0 nodes initially and then scale the nodepool after the control plane is up. Will be fixed in next RHACM release (RHACM 2.10/OCP 4.15); fix may get backedported to RHACM 2.9 but unclear right now.
-
-- https://issues.redhat.com/browse/OCPBUGS-23516
-
-  This requires us to disable caching in the browser, otherwise all console plugins are disabled. Should be fixed in 4.14.11.
-
 # Hosted Control Planes (neè HyperShift)
 
 [Hosted Control Planes](https://docs.openshift.com/container-platform/4.14/hosted_control_planes/index.html) -- the product formerly known as HyperShift -- allows you to create containerized OpenShift control planes. This has a number of advantages:
