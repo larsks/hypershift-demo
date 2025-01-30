@@ -1,0 +1,20 @@
+[project]
+name = "hypershift-demo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "python-esiclient",
+    "python-esileapclient",
+    "python-ironicclient>=5.10.0",
+    "python-openstackclient>=7.2.1",
+]
+
+[[tool.uv.index]]
+url = "http://devpi.internal/root/pypi/+simple/"
+default = true
+
+[tool.uv.sources]
+python-esiclient = { git = "https://github.com/cci-moc/python-esiclient" }
+python-esileapclient = { git = "https://github.com/cci-moc/python-esileapclient" }
