@@ -9,4 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-infraenv/pull-secret.txt
+pull-secret.txt
+secret.yaml
+kubeconfig

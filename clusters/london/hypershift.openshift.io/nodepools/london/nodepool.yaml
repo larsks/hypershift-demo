@@ -1,0 +1,22 @@
+apiVersion: hypershift.openshift.io/v1beta1
+kind: NodePool
+metadata:
+  creationTimestamp: null
+  name: london
+  namespace: clusters
+spec:
+  arch: amd64
+  clusterName: london
+  management:
+    autoRepair: false
+    upgradeType: InPlace
+  nodeDrainTimeout: 0s
+  nodeVolumeDetachTimeout: 0s
+  platform:
+    agent: {}
+    type: Agent
+  release:
+    image: quay.io/openshift-release-dev/ocp-release:4.17.9-multi
+  replicas: 3
+status:
+  replicas: 0

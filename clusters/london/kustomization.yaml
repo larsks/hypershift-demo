@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- core/namespaces/clusters/namespace.yaml
+- hypershift.openshift.io/hostedclusters/london/hostedcluster.yaml
+- hypershift.openshift.io/nodepools/london/nodepool.yaml
+- rbac.authorization.k8s.io/roles/capi-provider-role/role.yaml
+
+# WARNING! These are not in the repository; you will need to generate them yourself.
+# See the corresponding .sample file for an example of the appropriate content.
+- core/secrets/london-etcd-encryption-key/secret.yaml
+- core/secrets/london-pull-secret/secret.yaml
+- core/secrets/london-ssh-key/secret.yaml
