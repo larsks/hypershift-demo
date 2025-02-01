@@ -1,5 +1,15 @@
 # Hosted Control Planes (neè HyperShift)
 
+---
+
+> [!WARNING]
+> The scripts in this repository are what I used during our meetings during the
+> week of 1/27/2025-1/30/2025. They are intended to get things running and
+> demonstrate some of the necessary steps. They are **not** meant to represent
+> best (or even recommended) practice.
+
+---
+
 [Hosted Control Planes](https://docs.openshift.com/container-platform/4.14/hosted_control_planes/index.html) -- the product formerly known as HyperShift -- allows you to create containerized OpenShift control planes. This has a number of advantages:
 
 1. More efficient use of hardware resources
@@ -49,9 +59,9 @@ Or you can generate the manifests via some other mechanism (e.g. `kustomize`) an
 
 The process of realizing the HostedCluster will create three namespaces:
 
-- `namespace/clusters-vcluster2`
-- `namespace/klusterlet-vcluster2`
-- `namespace/vcluster2`
+- `clusters-vcluster2`
+- `klusterlet-vcluster2`
+- `vcluster2`
 
 Cluster metadata, like the HostedCluster resource itself, Secrets, etc, are created in the `clusters` namespace.
 
@@ -93,15 +103,7 @@ clusters:
 .
 ```
 
-The `api` hostname should point at nodes in the management cluster:
-
-```
-$ host api.vcluster1.int.massopen.cloud
-api.vcluster1.int.massopen.cloud is an alias for nodes.hypershift1.int.massopen.cloud.
-nodes.hypershift1.int.massopen.cloud has address 10.30.8.84
-nodes.hypershift1.int.massopen.cloud has address 10.30.8.85
-nodes.hypershift1.int.massopen.cloud has address 10.30.8.87
-```
+The `api` hostname should point at one or more nodes in the management cluster.
 
 At this point, we have a functioning control plane but there are no workloads running on the hosted cluster...
 
@@ -149,13 +151,19 @@ Adding nodes is a familiar process:
 - Boot the nodes with the ISO
 - Wait for them to register with the InfraEnv
 
-There are also options for having ACM manage the discovery process automatically utilizing the node bmc, or of provisioning nodes via an existing PXE server. You can retrieve an appropriate iPXE script from the InfraEnv:
+You can get the path for the discovery ISO like this:
 
 ```
-curl -o discovery.ipxe "$(oc get infraenv available-nodes -o jsonpath='{.status.bootArtifacts.ipxeScript}')"
+oc -n hardware-inventory get infraenv hardware-inventory -o jsonpath='{.status.isoDownloadURL}'
 ```
 
-Which will look something like:
+There are also options for having ACM manage the discovery process automatically utilizing the node bmc, or of provisioning nodes via an existing PXE server. You can retrieve the URL for the iPXE script from the InfraEnv:
+
+```
+oc -n hardware-inventory get infraenv hardware-inventory -o jsonpath='{.status.bootArtifacts.ipxeScript}'
+```
+
+The script will look something like:
 
 ```
 #!ipxe
@@ -185,7 +193,7 @@ db54484f-3f20-d5dc-bf24-6b1d3d8f0a68               true       auto-assign
 
 ## Adding nodes
 
-We created a NodePool resource along with the HostedCluster. Initially, the NodePool has zero nodes (this is not a necessary precondition except that there exists a bug in ACM, to be fixed by the next ACM release):
+We created a NodePool resource along with the HostedCluster. Initially, the NodePool has zero nodes (you can start with a populated nodepool by passing the `--nodepool-replicas` option to the `hcp` command line):
 
 ```
 $ oc -n clusters get nodepool vcluster2
